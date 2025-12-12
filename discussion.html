@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Discussion Forum - Pawsitively</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .page-hero { padding:96px 0 16px; }
+    .forum-controls { display:flex; gap:0.5rem; align-items:center; margin-top:0.5rem; }
+    .threads { margin-top:1rem; display:flex; flex-direction:column; gap:0.75rem; }
+    .thread-card { padding:0.85rem; border-radius:12px; background:white; box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+    .thread-meta { color:#718096; font-size:0.9rem; margin-top:0.35rem; }
+    .modal { position:fixed; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:9999; }
+    .modal .panel { width:100%; max-width:720px; background:white; padding:1rem; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    @media (max-width:720px){ .forum-controls { flex-direction:column; align-items:stretch } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo"><h2><a href="dashboard.html" style="text-decoration:none;color:inherit">Pawsitively</a></h2></div>
+        <ul class="nav-menu">
+          <li><a href="dashboard.html" class="nav-link">Home</a></li>
+          <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="vet-clinic.html" class="nav-link">Klinik</a></li>
+        </ul>
+        <div class="user-profile">
+          <div class="profile-icon"><i class="fas fa-user"></i></div>
+          <span class="username">Hi, USER</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container" style="padding-top:100px;">
+    <section class="page-hero">
+      <h1>Forum Diskusi</h1>
+      <p style="color:#718096">Bertanya, berbagi pengalaman, dan saling membantu dalam komunitas pemilik hewan peliharaan.</p>
+
+      <div class="forum-controls">
+        <input id="threadSearch" type="search" placeholder="Cari thread..." style="flex:1;padding:0.6rem;border-radius:8px;border:2px solid #edf2f7;">
+        <button class="btn btn-primary" id="newThreadBtn">Buat Thread Baru</button>
+      </div>
+    </section>
+
+    <section>
+      <div id="threads" class="threads">
+        <!-- Thread cards injected by JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" style="margin-top:2rem;">
+    <div class="container"><div style="text-align:center;color:#a0aec0;">&copy; 2024 Pawsitively</div></div>
+  </footer>
+
+  <!-- Modal template -->
+  <div id="modalRoot" style="display:none;"></div>
+
+  <script>
+    // Simple forum using localStorage (demo)
+    const STORAGE_KEY = 'paws_forum_threads_v1';
+
+    // initial sample threads
+    const initialThreads = [
+      { id: generateId(), title: "Bagaimana menangani kecemasan kucing saat petasan?", author: "Ani", created: Date.now()-86400000, replies: [{id:generateId(), author:"Budi", text:"Coba sediakan ruang tenang dan mainan pengalih."}] },
+      { id: generateId(), title: "Rekomendasi pakan untuk anjing senior?", author: "Rizal", created: Date.now()-3600*1000*24*5, replies: [] }
+    ];
+
+    function generateId(){ return 't_'+Math.random().toString(36).substr(2,9); }
+
+    function loadThreads(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw){ localStorage.setItem(STORAGE_KEY, JSON.stringify(initialThreads)); return initialThreads; }
+      try { return JSON.parse(raw) } catch(e){ localStorage.removeItem(STORAGE_KEY); localStorage.setItem(STORAGE_KEY, JSON.stringify(initialThreads)); return initialThreads; }
+    }
+
+    function saveThreads(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+    let threads = loadThreads();
+
+    const threadsContainer = document.getElementById('threads');
+    const threadSearch = document.getElementById('threadSearch');
+    const newThreadBtn = document.getElementById('newThreadBtn');
+    const modalRoot = document.getElementById('modalRoot');
+
+    function renderThreads(filter=''){
+      threadsContainer.innerHTML = '';
+      const list = threads.filter(t => t.title.toLowerCase().includes(filter.toLowerCase()));
+      if(!list.length){
+        threadsContainer.innerHTML = '<div class="thread-card">Belum ada thread.</div>'; return;
+      }
+      list.sort((a,b)=> b.created - a.created);
+      list.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'thread-card';
+        el.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <a href="#" onclick="openThread('${t.id}')" style="font-weight:700;text-decoration:none;color:inherit">${escapeHtml(t.title)}</a>
+              <div class="thread-meta">oleh <strong>${escapeHtml(t.author)}</strong> • ${timeAgo(t.created)} • Balasan: ${t.replies?.length || 0}</div>
+            </div>
+            <div>
+              <button class="btn btn-outline" onclick="openThread('${t.id}')">Lihat</button>
+            </div>
+          </div>
+        `;
+        threadsContainer.appendChild(el);
+      });
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function timeAgo(ts){
+      const s = Math.floor((Date.now()-ts)/1000);
+      if(s < 60) return `${s}s yang lalu`;
+      const m = Math.floor(s/60); if(m < 60) return `${m}m yang lalu`;
+      const h = Math.floor(m/60); if(h < 24) return `${h}j yang lalu`;
+      const d = Math.floor(h/24); return `${d} hari yang lalu`;
+    }
+
+    function openThread(id){
+      const t = threads.find(x=>x.id===id); if(!t) return alert('Thread tidak ditemukan');
+      // build modal
+      modalRoot.style.display='block';
+      modalRoot.innerHTML = `
+        <div class="modal" onclick="if(event.target===this) closeModal()">
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h3 style="margin:0">${escapeHtml(t.title)}</h3>
+              <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
+            </div>
+            <div style="color:#718096;margin-top:0.5rem;">oleh <strong>${escapeHtml(t.author)}</strong> • ${timeAgo(t.created)}</div>
+            <div style="margin-top:1rem;max-height:340px;overflow:auto;padding-right:0.5rem;">
+              ${t.replies && t.replies.length ? t.replies.map(r => `<div style="padding:0.6rem;margin-bottom:0.5rem;border-radius:8px;background:#f7fafc;"><strong>${escapeHtml(r.author)}</strong><div style="margin-top:0.35rem">${escapeHtml(r.text)}</div></div>`).join('') : '<div style="color:#718096;">Belum ada balasan.</div>'}
+            </div>
+
+            <div style="margin-top:1rem;">
+              <input id="replyAuthor" type="text" placeholder="Nama Anda" style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:0.5rem;">
+              <textarea id="replyText" placeholder="Tulis balasan..." rows="3" style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid #e2e8f0;"></textarea>
+              <div style="display:flex;gap:0.5rem;margin-top:0.5rem;justify-content:flex-end;">
+                <button class="btn btn-primary" onclick="postReply('${t.id}')">Kirim Balasan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function closeModal(){
+      modalRoot.style.display='none';
+      modalRoot.innerHTML='';
+    }
+
+    function postReply(threadId){
+      const author = document.getElementById('replyAuthor').value.trim() || 'Pengunjung';
+      const text = document.getElementById('replyText').value.trim();
+      if(!text) return alert('Tulis balasan terlebih dahulu.');
+      const thread = threads.find(x=>x.id===threadId);
+      thread.replies = thread.replies || [];
+      thread.replies.push({ id: generateId(), author, text, created: Date.now() });
+      saveThreads(threads);
+      renderThreads(threadSearch.value);
+      openThread(threadId); // reopen to show new reply
+    }
+
+    function createThread(){
+      modalRoot.style.display='block';
+      modalRoot.innerHTML = `
+        <div class="modal" onclick="if(event.target===this) closeModal()">
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h3 style="margin:0">Buat Thread Baru</h3>
+              <button class="btn btn-outline" onclick="closeModal()">Tutup</button>
+            </div>
+            <div style="margin-top:1rem;">
+              <input id="newTitle" type="text" placeholder="Judul thread" style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:0.5rem;">
+              <input id="newAuthor" type="text" placeholder="Nama Anda" style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:0.5rem;">
+              <textarea id="newBody" placeholder="Deskripsi / pertanyaan..." rows="5" style="width:100%;padding:0.6rem;border-radius:8px;border:1px solid #e2e8f0;"></textarea>
+              <div style="display:flex;gap:0.5rem;margin-top:0.5rem;justify-content:flex-end;">
+                <button class="btn btn-primary" onclick="submitNewThread()">Posting</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function submitNewThread(){
+      const title = document.getElementById('newTitle').value.trim();
+      const author = document.getElementById('newAuthor').value.trim() || 'Pengunjung';
+      const body = document.getElementById('newBody').value.trim();
+      if(!title) return alert('Judul tidak boleh kosong.');
+      const t = { id: generateId(), title, author, created: Date.now(), replies: [] };
+      if(body) t.replies.push({ id: generateId(), author, text: body, created: Date.now() });
+      threads.push(t);
+      saveThreads(threads);
+      renderThreads(threadSearch.value);
+      closeModal();
+      alert('Thread berhasil dibuat (demo).');
+    }
+
+    // bind events
+    newThreadBtn.addEventListener('click', createThread);
+    threadSearch.addEventListener('input', ()=> renderThreads(threadSearch.value));
+
+    // initial render
+    renderThreads();
+
+    // expose openThread to global scope for inline onclick in generated HTML
+    window.openThread = openThread;
+    window.closeModal = closeModal;
+    window.postReply = postReply;
+    window.generateId = generateId;
+    window.escapeHtml = escapeHtml;
+  </script>
+</body>
+</html>

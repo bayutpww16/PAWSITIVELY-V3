@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vet Clinic Locations - Pawsitively</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Small page-specific tweaks */
+    .page-hero {
+      padding: 96px 0 24px;
+      text-align: left;
+    }
+    .clinic-actions { margin-top: 0.75rem; display:flex; gap:0.5rem; }
+    .clinic-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:1rem; margin-top:1rem; }
+    .clinic-card { padding:1rem; border-radius:12px; background:white; box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+    .map-wrap { border-radius:12px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,0.08); }
+    .search-row { display:flex; gap:0.5rem; margin-top:1rem; align-items:center; }
+    @media (max-width:768px){ .page-hero { text-align:center } .search-row{flex-direction:column;align-items:stretch} }
+  </style>
+</head>
+<body>
+  <!-- Header (consistent with site) -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="logo"><h2><a href="dashboard.html" style="text-decoration:none;color:inherit">Pawsitively</a></h2></div>
+        <ul class="nav-menu">
+          <li><a href="dashboard.html" class="nav-link">Home</a></li>
+          <li><a href="blog.html" class="nav-link">Blog</a></li>
+          <li><a href="discussion.html" class="nav-link">Forum</a></li>
+        </ul>
+        <div class="user-profile">
+          <div class="profile-icon"><i class="fas fa-user"></i></div>
+          <span class="username">Hi, USER</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container" style="padding-top:100px;">
+    <section class="page-hero">
+      <h1>Lokasi Klinik Hewan</h1>
+      <p style="color:#718096; max-width:760px;">Temukan klinik hewan terdekat, lihat di peta, dan dapatkan arahan menuju lokasi. Gunakan fitur pencarian untuk menemukan klinik berdasarkan nama atau area.</p>
+
+      <div class="search-row">
+        <input id="clinicSearch" type="search" placeholder="Cari nama klinik atau kota..." style="flex:1;padding:0.6rem;border-radius:8px;border:2px solid #edf2f7;">
+        <select id="cityFilter" style="padding:0.6rem;border-radius:8px;border:2px solid #edf2f7;">
+          <option value="">Semua Kota</option>
+          <option value="Jakarta">Jakarta</option>
+          <option value="Bandung">Bandung</option>
+          <option value="Surabaya">Surabaya</option>
+        </select>
+        <button class="btn btn-primary" id="searchBtn">Cari</button>
+      </div>
+    </section>
+
+    <section style="margin-top:18px;">
+      <!-- Map -->
+      <div class="map-wrap">
+        <!-- Google Maps embed - generic view (replace with your API/key or dynamic embed if needed) -->
+        <iframe
+          title="Peta Klinik Hewan"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126916.21961900118!2d106.68943194999999!3d-6.2297286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5fa8f3a2d01%3A0x3c8d9b7b1e4a6f9b!2sVeterinary%20Clinic!5e0!3m2!1sen!2sid!4v1610000000000!5m2!1sen!2sid"
+          width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+
+      <!-- Clinic list -->
+      <div style="margin-top:1rem;">
+        <h3>Daftar Klinik</h3>
+        <div id="clinicGrid" class="clinic-grid">
+          <!-- Cards populated by JS below -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" style="margin-top:2rem;">
+    <div class="container"><div style="text-align:center;color:#a0aec0;">&copy; 2024 Pawsitively</div></div>
+  </footer>
+
+  <script>
+    // Sample data - replace/add as needed
+    const clinics = [
+      { id:1, name: "Happy Paws Veterinary", address: "Jl. Contoh No.12, Jakarta", city:"Jakarta", lat:-6.200, lng:106.816, maps:"https://www.google.com/maps/search/?api=1&query=Happy+Paws+Veterinary,+Jakarta" },
+      { id:2, name: "Healthy Pets Clinic", address: "Jl. Sehat No.45, Bandung", city:"Bandung", lat:-6.9147, lng:107.6098, maps:"https://www.google.com/maps/search/?api=1&query=Healthy+Pets+Clinic,+Bandung" },
+      { id:3, name: "CareVet Surabaya", address: "Jl. Surabaya No.9, Surabaya", city:"Surabaya", lat:-7.2504, lng:112.7688, maps:"https://www.google.com/maps/search/?api=1&query=CareVet+Surabaya" },
+      { id:4, name: "Klinik Hewan Sejahtera", address: "Jl. Mawar No.3, Jakarta", city:"Jakarta", lat:-6.21, lng:106.85, maps:"https://www.google.com/maps/search/?api=1&query=Klinik+Hewan+Sejahtera,+Jakarta" }
+    ];
+
+    const clinicGrid = document.getElementById('clinicGrid');
+    const searchInput = document.getElementById('clinicSearch');
+    const cityFilter = document.getElementById('cityFilter');
+    const searchBtn = document.getElementById('searchBtn');
+
+    function renderClinics(list) {
+      clinicGrid.innerHTML = '';
+      if(!list.length) {
+        clinicGrid.innerHTML = '<div class="clinic-card" style="grid-column:1/-1;">Tidak ada klinik ditemukan.</div>';
+        return;
+      }
+      list.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'clinic-card';
+        card.innerHTML = `
+          <strong>${escapeHtml(c.name)}</strong>
+          <div style="color:#718096;margin-top:0.35rem;">${escapeHtml(c.address)}</div>
+          <div style="color:#667eea;font-weight:600;margin-top:0.6rem;">${escapeHtml(c.city)}</div>
+          <div class="clinic-actions">
+            <a class="btn btn-outline" href="${c.maps}" target="_blank" rel="noopener">Buka di Maps</a>
+            <button class="btn btn-primary" onclick="focusOn(${c.lat}, ${c.lng})">Petunjuk Arah</button>
+          </div>
+        `;
+        clinicGrid.appendChild(card);
+      });
+    }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function focusOn(lat, lng){
+      // Open Google Maps directions in new tab
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      window.open(url, '_blank');
+    }
+
+    function applyFilter(){
+      const q = searchInput.value.trim().toLowerCase();
+      const city = cityFilter.value;
+      const filtered = clinics.filter(c => {
+        const matchQ = !q || c.name.toLowerCase().includes(q) || c.address.toLowerCase().includes(q);
+        const matchCity = !city || c.city === city;
+        return matchQ && matchCity;
+      });
+      renderClinics(filtered);
+    }
+
+    // initial render
+    renderClinics(clinics);
+
+    // event bindings
+    searchBtn.addEventListener('click', applyFilter);
+    searchInput.addEventListener('keydown', (e) => { if(e.key==='Enter') applyFilter(); });
+    cityFilter.addEventListener('change', applyFilter);
+  </script>
+</body>
+</html>

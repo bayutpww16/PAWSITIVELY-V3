@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Book Appointment - Pawsitively</title>
+  <link rel="stylesheet" href="booking.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="index.html">Pawsitively</a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="dashboard.html">Service</a>
+        <a href="blog.html">Blog</a>
+      </nav>
+      <div class="profile">
+        <div class="profile-icon" aria-hidden="true"><i class="fas fa-user"></i></div>
+        <div class="profile-name">Hi, USER</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-inner">
+      <h1 class="page-title">Book Appointment</h1>
+
+      <div class="booking-shell">
+        <!-- Left: doctor panel -->
+        <aside class="doctor-panel" id="doctorPanel" aria-labelledby="doctorNameLabel">
+          <!-- populated by JS -->
+        </aside>
+
+        <!-- Right: multi-step booking -->
+        <section class="booking-steps" aria-live="polite">
+          <!-- Step indicators -->
+          <ol class="steps-indicator" aria-hidden="false">
+            <li class="step-pill active" data-step="1">1. Date</li>
+            <li class="step-pill" data-step="2">2. Time</li>
+            <li class="step-pill" data-step="3">3. Details</li>
+          </ol>
+
+          <div class="step-panel" id="stepPanel">
+            <!-- STEP 1 -->
+            <div class="step" data-step="1">
+              <h2 class="step-title">Grab a Date</h2>
+              <div class="step-content">
+                <div id="calendarWrap" class="calendar-wrap" aria-label="Calendar"></div>
+                <div class="pick-summary">
+                  <p><strong>Selected date</strong></p>
+                  <div id="selectedDate">Belum ada tanggal dipilih</div>
+                </div>
+              </div>
+              <div class="step-actions">
+                <button class="btn btn-outline" onclick="location.href='consultation.html'">Cancel</button>
+                <button class="btn btn-primary" id="toStep2" disabled>Next</button>
+              </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="step" data-step="2" hidden>
+              <h2 class="step-title">Time</h2>
+              <div class="step-content time-step">
+                <div class="time-picker-large" aria-label="Time selector">
+                  <div class="time-box">
+                    <label class="time-label">Hour</label>
+                    <select id="hourSelect" class="time-select" aria-label="Hour"></select>
+                  </div>
+                  <div class="time-colon">:</div>
+                  <div class="time-box">
+                    <label class="time-label">Minute</label>
+                    <select id="minuteSelect" class="time-select" aria-label="Minute"></select>
+                  </div>
+                  <div class="time-box">
+                    <label class="time-label">AM/PM</label>
+                    <select id="ampmSelect" class="time-select" aria-label="AM or PM">
+                      <option>AM</option><option>PM</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="pick-summary">
+                  <p><strong>Selected time</strong></p>
+                  <div id="selectedTime">Belum ada waktu dipilih</div>
+                  <p class="note">Pilih jam praktik dokter sesuai jadwal.</p>
+                </div>
+              </div>
+
+              <div class="step-actions">
+                <button class="btn btn-outline" id="backTo1">Back</button>
+                <button class="btn btn-primary" id="toStep3" disabled>Next</button>
+              </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="step" data-step="3" hidden>
+              <h2 class="step-title">Bill Detail</h2>
+              <div class="step-content form-step">
+                <form id="bookingForm" class="booking-form" novalidate>
+                  <input type="hidden" id="formDoctorId" name="doctorId">
+                  <input type="hidden" id="formDate" name="date">
+                  <input type="hidden" id="formTime" name="time">
+
+                  <label> Your Name
+                    <input id="formName" name="name" type="text" placeholder="Nama Anda" required>
+                  </label>
+
+                  <label> Phone Number
+                    <input id="formPhone" name="phone" type="tel" placeholder="08xxxxxxxx" required>
+                  </label>
+
+                  <label> Email
+                    <input id="formEmail" name="email" type="email" placeholder="name@example.com" required>
+                  </label>
+
+                  <label> Animal Type
+                    <input id="formAnimal" name="animal" placeholder="Cat, dog, bird, etc">
+                  </label>
+
+                  <label> Pet Name
+                    <input id="formPetName" name="petName" placeholder="Pet name">
+                  </label>
+
+                  <div class="row">
+                    <label class="col"> Pet Gender
+                      <div class="radio-row">
+                        <label><input type="radio" name="petGender" value="Male" checked> Male</label>
+                        <label><input type="radio" name="petGender" value="Female"> Female</label>
+                      </div>
+                    </label>
+
+                    <label class="col"> Pet Age
+                      <input id="formPetAge" name="petAge" placeholder="Month/Year">
+                    </label>
+                  </div>
+
+                  <label> Pet Weight (kg)
+                    <input id="formPetWeight" name="petWeight" placeholder="kg">
+                  </label>
+
+                  <label> Complaint / Notes
+                    <textarea id="formNotes" name="notes" rows="4" placeholder="Write down here..."></textarea>
+                  </label>
+
+                  <div class="step-actions">
+                    <button type="button" class="btn btn-outline" id="backTo2">Back</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="confirmToast" class="toast" role="status" aria-live="polite" hidden>
+    <div class="toast-inner">
+      <h3>Booking Submitted</h3>
+      <p id="toastText"></p>
+      <div style="text-align:right"><button class="btn btn-primary" onclick="closeToast()">OK</button></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2024 Pawsitively. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const DOCTORS = {
+      dr_sri: { id:'dr_sri', name:'DRH. SRI JANUARY', fee:'Rp. 150.000', img:'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=800&h=800&fit=crop&crop=center', schedule:'08:00 - 20:00', place:'Batam Centre', experience:'5 years' },
+      dr_abiv: { id:'dr_abiv', name:'DRH. ABIV YANTO', fee:'Rp. 200.000', img:'https://images.unsplash.com/photo-1596496059191-1b226baf1a1b?w=800&h=800&fit=crop&crop=center', schedule:'09:00 - 18:00', place:'Jakarta Clinic', experience:'8 years' },
+      dr_yakti: { id:'dr_yakti', name:'DRH. YAKTI NOVI', fee:'Rp. 180.000', img:'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800&h=800&fit=crop&crop=center', schedule:'08:00 - 20:00', place:'Batam Centre', experience:'5 years' }
+    };
+
+    function qs(name){ return new URLSearchParams(location.search).get(name); }
+    function el(id){ return document.getElementById(id); }
+
+    const doctorKey = qs('doctor') || 'dr_yakti';
+    const doctor = DOCTORS[doctorKey] || Object.values(DOCTORS)[0];
+
+    function renderDoctorPanel(){
+      const panel = el('doctorPanel');
+      panel.innerHTML = `
+        <img src="${doctor.img}" alt="${doctor.name}" class="doctor-photo">
+        <div class="doctor-info">
+          <div class="doctor-fee">${doctor.fee}</div>
+          <h3 id="doctorNameLabel" class="doctor-name">${doctor.name}</h3>
+          <div class="meta"><strong>Practice schedule :</strong> ${doctor.schedule}</div>
+          <div class="meta"><strong>Practice Place :</strong> ${doctor.place}</div>
+          <div class="meta"><strong>Experience :</strong> ${doctor.experience}</div>
+        </div>
+      `;
+      if (el('formDoctorId')) el('formDoctorId').value = doctor.id;
+    }
+
+    renderDoctorPanel();
+
+    (function createCalendar(){
+      const wrap = el('calendarWrap');
+      const today = new Date();
+      let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      function buildMonth(monthDate){
+        wrap.innerHTML = '';
+        const monthName = monthDate.toLocaleString('default',{ month:'long' });
+        const header = document.createElement('div');
+        header.className = 'cal-header';
+        header.innerHTML = `<div class="cal-month">${monthName} ${monthDate.getFullYear()}</div>`;
+        wrap.appendChild(header);
+
+        const grid = document.createElement('div');
+        grid.className = 'cal-grid';
+        ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(n => {
+          const d = document.createElement('div'); d.className = 'cal-dayname'; d.textContent = n; grid.appendChild(d);
+        });
+
+        const firstWeekDay = (monthDate.getDay() + 6) % 7;
+        const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth()+1, 0).getDate();
+
+        for(let i=0;i<firstWeekDay;i++){ const c = document.createElement('div'); c.className='cal-cell empty'; grid.appendChild(c); }
+        for(let d=1; d<=daysInMonth; d++){
+          const date = new Date(monthDate.getFullYear(), monthDate.getMonth(), d);
+          const cell = document.createElement('button');
+          cell.className = 'cal-cell day'; cell.type='button';
+          cell.dataset.date = date.toISOString().slice(0,10); cell.textContent = d;
+          const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          if(isPast){ cell.disabled = true; cell.classList.add('disabled'); }
+          cell.addEventListener('click', () => {
+            wrap.querySelectorAll('.cal-cell.day.selected').forEach(n => n.classList.remove('selected'));
+            cell.classList.add('selected');
+            el('selectedDate').textContent = cell.dataset.date;
+            el('formDate').value = cell.dataset.date;
+            el('toStep2').disabled = false;
+          });
+          grid.appendChild(cell);
+        }
+        wrap.appendChild(grid);
+      }
+      buildMonth(currentMonth);
+    })();
+
+    // Steps wiring
+    const toStep2Btn = el('toStep2'); const toStep3Btn = el('toStep3');
+    const backTo1Btn = el('backTo1'); const backTo2Btn = el('backTo2');
+    const stepsIndicator = Array.from(document.querySelectorAll('.step-pill'));
+    const steps = Array.from(document.querySelectorAll('.step'));
+    function showStep(n){
+      steps.forEach(s => s.hidden = (Number(s.dataset.step) !== n));
+      stepsIndicator.forEach(p => p.classList.toggle('active', Number(p.dataset.step) === n));
+      if(n===1){}
+      if(n===2) el('hourSelect').focus();
+      if(n===3) el('formName').focus();
+    }
+
+    toStep2Btn.addEventListener('click', () => showStep(2));
+    backTo1Btn.addEventListener('click', () => showStep(1));
+    backTo2Btn.addEventListener('click', () => showStep(2));
+
+    // time selectors
+    function populateTimeSelectors(){
+      const hourSel = el('hourSelect'); const minSel = el('minuteSelect'); hourSel.innerHTML=''; minSel.innerHTML='';
+      for(let h=1; h<=12; h++){ const opt = document.createElement('option'); opt.value=(h<10?'0'+h:h); opt.textContent=(h<10?'0'+h:h); hourSel.appendChild(opt); }
+      ['00','15','30','45'].forEach(m=>{ const opt=document.createElement('option'); opt.value=m; opt.textContent=m; minSel.appendChild(opt); });
+      hourSel.value='08'; minSel.value='00'; el('ampmSelect').value='AM'; updateSelectedTimeDisplay();
+    }
+    populateTimeSelectors();
+
+    function updateSelectedTimeDisplay(){
+      const h = el('hourSelect').value; const m = el('minuteSelect').value; const ap = el('ampmSelect').value;
+      const t = `${h}:${m} ${ap}`; el('selectedTime').textContent = t; el('formTime').value = t; el('toStep3').disabled = false;
+    }
+    ['hourSelect','minuteSelect','ampmSelect'].forEach(id => el(id).addEventListener('change', updateSelectedTimeDisplay));
+
+    toStep3Btn.addEventListener('click', () => { el('formDoctorId').value = doctor.id; showStep(3); });
+
+    // form submit - demo: save to localStorage, show toast
+    el('bookingForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      if(!form.formName.value.trim() || !form.formPhone.value.trim() || !form.formEmail.value.trim()){
+        alert('Mohon isi Nama, Phone dan Email.');
+        return;
+      }
+      const data = {
+        id: 'bk_' + Date.now(),
+        doctorId: doctor.id,
+        doctorName: doctor.name,
+        date: el('formDate').value,
+        time: el('formTime').value,
+        name: el('formName').value.trim(),
+        phone: el('formPhone').value.trim(),
+        email: el('formEmail').value.trim(),
+        animal: el('formAnimal').value,
+        petName: el('formPetName').value,
+        petGender: (document.querySelector('input[name="petGender"]:checked') || {}).value || '',
+        petAge: el('formPetAge').value,
+        petWeight: el('formPetWeight').value,
+        notes: el('formNotes').value
+      };
+      const existing = JSON.parse(localStorage.getItem('paws_appointments') || '[]');
+      existing.push(data);
+      localStorage.setItem('paws_appointments', JSON.stringify(existing));
+      el('toastText').textContent = `Appointment for ${data.name} with ${data.doctorName} on ${data.date} at ${data.time} has been saved.`;
+      el('confirmToast').hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    function closeToast(){ el('confirmToast').hidden = true; location.href='consultation.html'; }
+
+    (function init(){
+      el('formDoctorId').value = doctor.id;
+      const qDate = qs('date'); if(qDate){ el('formDate').value = qDate; el('selectedDate').textContent = qDate; el('toStep2').disabled = false; }
+      const qTime = qs('time'); if(qTime) el('formTime').value = qTime;
+      showStep(1);
+    })();
+  </script>
+</body>
+</html>

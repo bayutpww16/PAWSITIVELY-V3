@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Online Consultation - Pawsitively</title>
+
+  <link rel="stylesheet" href="consultation.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- NAV / HEADER -->
+  <header class="site-header" role="banner">
+    <div class="nav-inner">
+      <a class="logo" href="index.html" aria-label="Pawsitively home">Pawsitively</a>
+
+      <nav class="main-nav" role="navigation" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="dashboard.html">Service</a>
+        <a href="blog.html">Blog</a>
+      </nav>
+
+      <div class="profile">
+        <div class="profile-icon" aria-hidden="true"><i class="fas fa-user-circle"></i></div>
+        <div class="profile-name">Hi, USER</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <h1 class="hero-title">Online Consultation</h1>
+        <p class="hero-sub">Chat with the professionals</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Meet Our Veterinarian -->
+  <section class="team-section" aria-labelledby="teamTitle">
+    <div class="container">
+      <h2 id="teamTitle" class="section-title">Meet Our Veterinarian!</h2>
+
+      <div class="cards" role="list">
+        <article class="card" role="listitem" aria-label="Drh Sri January">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1550831107-1553da8c8464?w=1200&h=1400&fit=crop&crop=center" alt="DRH. SRI JANUARY">
+          </div>
+          <div class="card-body">
+            <h3 class="card-name">DRH. SRI JANUARY</h3>
+            <a class="btn-book" href="booking.html?doctor=dr_sri" aria-label="Book appointment with DRH. SRI JANUARY">BOOK APPOINTMENT</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" aria-label="Drh Abiv Yanto">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&h=1400&fit=crop&crop=center" alt="DRH. ABIV YANTO">
+          </div>
+          <div class="card-body">
+            <h3 class="card-name">DRH. ABIV YANTO</h3>
+            <a class="btn-book" href="booking.html?doctor=dr_abiv" aria-label="Book appointment with DRH. ABIV YANTO">BOOK APPOINTMENT</a>
+          </div>
+        </article>
+
+        <article class="card" role="listitem" aria-label="Drh Yakti Novi">
+          <div class="card-media">
+            <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=1200&h=1400&fit=crop&crop=center" alt="DRH. YAKTI NOVI">
+          </div>
+          <div class="card-body">
+            <h3 class="card-name">DRH. YAKTI NOVI</h3>
+            <a class="btn-book" href="booking.html?doctor=dr_yakti" aria-label="Book appointment with DRH. YAKTI NOVI">BOOK APPOINTMENT</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Footer small -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <h4>Get In Touch!</h4>
+        <p>For every new update from us</p>
+      </div>
+      <div class="footer-right">
+        <input id="footerEmail" type="email" placeholder="Your email">
+        <button class="subscribe-btn" onclick="subscribe()">Subscribe</button>
+      </div>
+    </div>
+    <div class="copyright">© 2024 Pawsitively</div>
+  </footer>
+
+  <script>
+    function subscribe(){
+      const el = document.getElementById('footerEmail');
+      const v = (el && el.value) || '';
+      if(!v) return alert('Please enter email');
+      alert('Subscribed: ' + v);
+      el.value = '';
+    }
+
+    // show username from session storage if exists
+    document.addEventListener('DOMContentLoaded', function(){
+      const name = sessionStorage.getItem('userName');
+      if(name){
+        const p = document.querySelector('.profile-name');
+        if(p) p.textContent = 'Hi, ' + name.split(' ')[0];
+      }
+    });
+  </script>
+</body>
+</html>

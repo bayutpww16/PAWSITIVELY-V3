@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog - Pawsitively</title>
+  <link rel="stylesheet" href="blog.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Small page-specific styles for modal & pagination */
+    .pagination-wrap {
+      display:flex;
+      justify-content:center;
+      gap:0.5rem;
+      margin-top:1.5rem;
+      align-items:center;
+    }
+    .page-btn {
+      padding:0.6rem 0.9rem;
+      border-radius:8px;
+      background:white;
+      border:1px solid #edf2f7;
+      cursor:pointer;
+    }
+    .page-btn.active {
+      background:var(--primary-500, #667eea);
+      color:white;
+      border-color:var(--primary-500, #667eea);
+    }
+    /* Modal (article detail) */
+    .article-modal {
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(0,0,0,0.45);
+      z-index:12000;
+    }
+    .article-modal.open { display:flex; }
+    .article-panel {
+      width:100%;
+      max-width:920px;
+      max-height:90vh;
+      overflow:auto;
+      background:white;
+      border-radius:12px;
+      padding:1.5rem;
+      box-shadow:0 30px 80px rgba(0,0,0,0.25);
+    }
+    .article-panel h2 { margin-top:0; }
+    .article-meta { color:var(--muted,#718096); margin-bottom:1rem; }
+    .article-panel img { width:100%; height:auto; border-radius:8px; margin:0.5rem 0 1rem; }
+    .modal-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; }
+    .btn { padding:0.6rem 0.9rem; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+    .btn-outline { background:transparent; border:1px solid #e2e8f0; color:#2d3748; }
+    .btn-primary { background:var(--primary-500,#667eea); color:white; border:none; }
+    .sr-only { position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden; }
+    @media (max-width:640px){
+      .article-panel { padding:1rem; max-width:92%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+      <nav class="navbar">
+          <div class="nav-container">
+              <div class="logo">
+                  <h2><a href="index.html" style="text-decoration:none;color:inherit;">Pawsitively</a></h2>
+              </div>
+              <ul class="nav-menu">
+                  <li><a href="dashboard.html" class="nav-link">Home</a></li>
+                  <li><a href="about.html" class="nav-link">About Us</a></li>
+                  <li><a href="services.html" class="nav-link">Services</a></li>
+                  <li><a href="blog.html" class="nav-link active">Blog</a></li>
+              </ul>
+              <div class="user-profile">
+                  <div class="profile-icon">
+                      <i class="fas fa-user"></i>
+                  </div>
+                  <span class="username">Hi, USER</span>
+              </div>
+          </div>
+      </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="blog-hero">
+      <div class="container">
+          <h1>Insights & Tips for Healthy Pets</h1>
+          <p>Read expert articles, care guides and timely tips to help your pet live a long and happy life.</p>
+      </div>
+  </section>
+
+  <!-- Main content (articles + sidebar) -->
+  <main class="container" style="padding-top:1.5rem;">
+    <div class="blog-grid-wrap" id="mainGrid">
+      <div>
+        <div id="articlesContainer"></div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrap" id="pagination">
+          <button class="page-btn" id="prevBtn">Prev</button>
+          <div id="pages"></div>
+          <button class="page-btn" id="nextBtn">Next</button>
+        </div>
+      </div>
+
+      <!-- Sidebar (static) -->
+      <aside class="sidebar">
+        <div class="widget">
+          <h4>Search</h4>
+          <div class="search-input">
+            <input id="searchInput" type="search" placeholder="Search articles..." aria-label="Search articles">
+            <button id="searchBtn" style="background:var(--primary-500);color:white;border:none;padding:0.55rem 0.75rem;border-radius:8px;cursor:pointer;">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="widget">
+          <h4>Popular Posts</h4>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <a href="#" class="read-popular" data-id="a4">Top 10 Treats Dogs Love</a>
+            <a href="#" class="read-popular" data-id="a5">When to See the Vet: A Checklist</a>
+            <a href="#" class="read-popular" data-id="a6">Traveling Safely with Pets</a>
+          </div>
+        </div>
+
+        <div class="widget">
+          <h4>Subscribe</h4>
+          <form id="newsletterForm" onsubmit="event.preventDefault(); alert('Subscribed!');">
+            <input type="email" placeholder="Your email" required style="padding:0.6rem;border-radius:8px;border:1px solid #edf2f7;width:100%;margin-bottom:0.5rem;">
+            <button type="submit" style="width:100%;padding:0.6rem;border-radius:8px;background:var(--primary-500);color:white;border:none;">Subscribe</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Article Detail Modal -->
+  <div id="articleModal" class="article-modal" aria-hidden="true">
+    <div class="article-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div id="modalContent">
+        <!-- Filled by JS -->
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="modalClose">Close</button>
+        <button class="btn btn-outline" id="modalPrev">Prev</button>
+        <button class="btn btn-primary" id="modalNext">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Robust client-side blog:
+     * - currentList: the list currently being displayed (full or filtered)
+     * - pagination and modal operate on currentList so navigation is consistent
+     */
+
+    const ARTICLES_PER_PAGE = 3;
+
+    // Sample articles data (id, title, category, excerpt, content, image)
+    const ARTICLES = [
+      { id: 'a1', title: 'Makanan Berbahaya untuk Hewan Peliharaan', category: 'FOOD',
+        excerpt: 'Pelajari makanan apa saja yang berbahaya bagi hewan peliharaan Anda...',
+        image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Banyak makanan manusia berbahaya untuk hewan peliharaan, termasuk cokelat, anggur, bawang, dan xylitol. Selalu simpan bahan makanan di tempat aman dan tanyakan kepada dokter hewan jika ragu.</p>
+                  <h3>Tindakan Darurat</h3>
+                  <p>Jika hewan memakan sesuatu yang berbahaya, segera hubungi klinik terdekat atau hotline racun hewan.</p>` },
+      { id: 'a2', title: 'Recognizing Signs of Anxiety in Cats', category: 'HEALTH',
+        excerpt: "Cats don't always show anxiety the same way humans do. We break down subtle signs and practical steps to comfort your cat at home.",
+        image: 'https://images.unsplash.com/photo-1558944351-d8a3c29f7f1d?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Kucing dapat menunjukkan tanda kecemasan melalui perubahan nafsu makan, menjilati berlebihan, atau menyembunyikan diri. Pemilik dapat membantu dengan menciptakan lingkungan yang stabil, bermain rutin, dan mempertimbangkan pheromone diffuser.</p>
+                  <h3>Langkah Perawatan</h3>
+                  <ol><li>Rutin bermain</li><li>Lingkungan aman</li><li>Konsultasi ke dokter hewan jika parah</li></ol>` },
+      { id: 'a3', title: 'Pentingnya Vaksinasi untuk Hewan Peliharaan', category: 'VACCINATION',
+        excerpt: 'Mengapa vaksinasi penting dan jadwal yang tepat untuk hewan peliharaan...',
+        image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Vaksin melindungi hewan dari penyakit serius. Pastikan mengikuti jadwal vaksin dasar dan konsultasikan jadwal booster dengan dokter hewan Anda.</p>
+                  <h3>Jadwal Umum</h3>
+                  <ul><li>Puppies/kittens: beberapa dosis awal</li><li>Dewasa: booster tahunan/berkala</li></ul>` },
+      { id: 'a4', title: 'Top 10 Treats Dogs Love', category: 'FOOD',
+        excerpt: 'A curated list of treats most dogs go crazy over, and which ones are healthier choices.',
+        image: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>From small training treats to healthy dehydrated options, choose treats with minimal ingredients and low salt/sugar.</p>` },
+      { id: 'a5', title: 'When to See the Vet: A Checklist', category: 'HEALTH',
+        excerpt: 'A handy checklist to help identify when you should take your pet to the vet.',
+        image: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Look for signs like lethargy, sudden appetite loss, vomiting multiple times, or unusual behavior — these warrant a visit.</p>` },
+      { id: 'a6', title: 'Traveling Safely with Pets', category: 'TRAVEL',
+        excerpt: 'Tips for safe and comfortable travel with your pet — by car, train or plane.',
+        image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Prepare a travel kit, ensure proper carriers, make rest stops in car trips, and check airline rules for pets.</p>` },
+      { id: 'a7', title: 'Dental Care for Pets', category: 'HEALTH',
+        excerpt: 'Tips for keeping your pet’s teeth healthy and preventing dental disease.',
+        image: 'https://images.unsplash.com/photo-1542736667-069246bdbc9d?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Regular brushing, dental chews, and professional cleanings help prevent periodontal disease.</p>` },
+      { id: 'a8', title: 'Nutrition Basics for Puppies', category: 'FOOD',
+        excerpt: 'What to feed your puppy during the first year to support healthy growth.',
+        image: 'https://images.unsplash.com/photo-1516972810927-80185027ca84?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Puppies need higher calorie and nutrient-dense formulas; consult the feeding guide on quality puppy foods.</p>` },
+      { id: 'a9', title: 'Exotic Pet Care: Birds & Reptiles', category: 'EXOTICS',
+        excerpt: 'Quick guide to caring for common exotic pets.',
+        image: 'https://images.unsplash.com/photo-1460500063983-994d4c277f2b?w=1200&h=700&fit=crop&crop=center',
+        content: `<p>Special diets, heat/light requirements for reptiles, and species-specific knowledge are essential.</p>` }
+    ];
+
+    // App state
+    let currentList = [...ARTICLES]; // list currently displayed (filtered or full)
+    let currentPage = 1;
+
+    // DOM refs
+    const articlesContainer = document.getElementById('articlesContainer');
+    const pagesContainer = document.getElementById('pages');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtnEl = document.getElementById('searchBtn');
+    const articleModal = document.getElementById('articleModal');
+    const modalContent = document.getElementById('modalContent');
+    const modalClose = document.getElementById('modalClose');
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
+
+    // Helpers
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function totalPagesFor(list) {
+      return Math.max(1, Math.ceil(list.length / ARTICLES_PER_PAGE));
+    }
+
+    // Render functions
+    function renderArticles(list = currentList) {
+      articlesContainer.innerHTML = '';
+      const start = (currentPage - 1) * ARTICLES_PER_PAGE;
+      const pageArticles = list.slice(start, start + ARTICLES_PER_PAGE);
+
+      if (!pageArticles.length) {
+        articlesContainer.innerHTML = '<div style="padding:1rem;background:white;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.06);">No articles found.</div>';
+        return;
+      }
+
+      pageArticles.forEach(article => {
+        const card = document.createElement('article');
+        card.className = 'blog-card';
+        card.innerHTML = `
+          <div class="blog-image"><img src="${article.image}" alt="${escapeHtml(article.title)}" class="blog-img"></div>
+          <div class="blog-content">
+            <span class="blog-category">${escapeHtml(article.category)}</span>
+            <h3>${escapeHtml(article.title)}</h3>
+            <p>${escapeHtml(article.excerpt)}</p>
+            <a href="#" class="read-more" data-id="${article.id}">Read More →</a>
+          </div>
+        `;
+        articlesContainer.appendChild(card);
+      });
+
+      // attach handlers
+      articlesContainer.querySelectorAll('.read-more').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const id = a.dataset.id;
+          openArticleModalById(id);
+        });
+      });
+    }
+
+    function renderPagination(list = currentList) {
+      pagesContainer.innerHTML = '';
+      const pages = totalPagesFor(list);
+      // Ensure currentPage is in range
+      if (currentPage > pages) currentPage = pages;
+      for (let i = 1; i <= pages; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+        btn.textContent = i;
+        btn.dataset.page = i;
+        btn.addEventListener('click', () => {
+          currentPage = Number(btn.dataset.page);
+          render();
+        });
+        pagesContainer.appendChild(btn);
+      }
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === pages;
+    }
+
+    function render(list = currentList) {
+      renderArticles(list);
+      renderPagination(list);
+      // update hash
+      history.replaceState(null, '', '#page=' + currentPage);
+    }
+
+    // Search: update currentList and reset page
+    function applySearch() {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      if (!q) {
+        currentList = [...ARTICLES];
+      } else {
+        currentList = ARTICLES.filter(a =>
+          a.title.toLowerCase().includes(q) ||
+          a.excerpt.toLowerCase().includes(q) ||
+          a.content.toLowerCase().includes(q)
+        );
+      }
+      currentPage = 1;
+      render(currentList);
+    }
+
+    // Modal logic uses currentList so Prev/Next operate in displayed context
+    function openArticleModalById(id) {
+      const idx = currentList.findIndex(a => a.id === id);
+      if (idx !== -1) {
+        showModalForIndex(idx);
+        return;
+      }
+      // if not in currentList (e.g. popular links), find in full ARTICLES
+      const fullIdx = ARTICLES.findIndex(a => a.id === id);
+      if (fullIdx !== -1) {
+        // switch currentList to full list and open
+        currentList = [...ARTICLES];
+        currentPage = Math.floor(fullIdx / ARTICLES_PER_PAGE) + 1;
+        render(currentList);
+        const newIdx = currentList.findIndex(a => a.id === id);
+        showModalForIndex(newIdx);
+      }
+    }
+
+    function showModalForIndex(idx) {
+      const a = currentList[idx];
+      if (!a) return;
+      modalContent.innerHTML = `
+        <h2 id="modalTitle">${escapeHtml(a.title)}</h2>
+        <div class="article-meta">${escapeHtml(a.category)} • ${new Date().toLocaleDateString()}</div>
+        <img src="${a.image}" alt="${escapeHtml(a.title)}">
+        <div class="article-body">${a.content}</div>
+      `;
+      articleModal.dataset.currentIndex = idx;
+      articleModal.classList.add('open');
+      articleModal.setAttribute('aria-hidden', 'false');
+      modalClose.focus();
+    }
+
+    function closeModal() {
+      articleModal.classList.remove('open');
+      articleModal.setAttribute('aria-hidden', 'true');
+    }
+
+    function modalPrevArticle() {
+      let idx = Number(articleModal.dataset.currentIndex || 0);
+      idx = Math.max(0, idx - 1);
+      showModalForIndex(idx);
+    }
+
+    function modalNextArticle() {
+      let idx = Number(articleModal.dataset.currentIndex || 0);
+      idx = Math.min(currentList.length - 1, idx + 1);
+      showModalForIndex(idx);
+    }
+
+    // Event bindings
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        render();
+      }
+    });
+    nextBtn.addEventListener('click', () => {
+      const pages = totalPagesFor(currentList);
+      if (currentPage < pages) {
+        currentPage++;
+        render();
+      }
+    });
+    searchBtnEl.addEventListener('click', applySearch);
+    searchInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') applySearch(); });
+
+    modalClose.addEventListener('click', closeModal);
+    modalPrev.addEventListener('click', modalPrevArticle);
+    modalNext.addEventListener('click', modalNextArticle);
+
+    // keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft' && articleModal.classList.contains('open')) modalPrevArticle();
+      if (e.key === 'ArrowRight' && articleModal.classList.contains('open')) modalNextArticle();
+    });
+
+    // popular links
+    document.querySelectorAll('.read-popular').forEach(item => {
+      item.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        const id = item.dataset.id;
+        openArticleModalById(id);
+      });
+    });
+
+    // init: read hash page and render initial
+    (function init(){
+      const hash = location.hash;
+      if (hash.startsWith('#page=')) {
+        const p = parseInt(hash.replace('#page=', ''), 10);
+        if (!isNaN(p) && p >= 1) currentPage = p;
+      }
+      currentList = [...ARTICLES];
+      render();
+    })();
+  </script>
+</body>
+</html>

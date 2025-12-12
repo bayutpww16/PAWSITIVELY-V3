@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
+    <title>Pawsitively - Your Pet's Wellness Destination</title>
+    <link rel="stylesheet" href="./dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h2>Pawsitively</h2>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home" class="nav-link">Home</a></li>
+                    <li><a href="#about" class="nav-link">About Us</a></li>
+                    <li><a href="#services" class="nav-link">Service</a></li>
+                    <li><a href="#blog" class="nav-link">Blog</a></li>
+                </ul>
+                <div class="user-profile">
+                    <div class="profile-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="username">Hi, USERNAME</span>
+                    <div class="dropdown">
+                        <button onclick="logout()" class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Pawsitively Healthy</h1>
+                    <h2>Your Pet's Wellness Destination.</h2>
+                    <p>Discover your pet's path to total wellness. At our comprehensive veterinary center, we combine cutting-edge medical care with compassionate service. Our expert veterinarians, advanced diagnostic tools, and personalized treatment plans ensure your pet receives the best possible care for a healthy, happy life.</p>
+                    <button class="cta-button">GET STARTED</button>
+                </div>
+                <div class="hero-image">
+                    <div class="image-container">
+                        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600&h=600&fit=crop&crop=center" alt="Cute Cat" class="cat-image">
+                        <div class="decorative-circle circle-1"></div>
+                        <div class="decorative-circle circle-2"></div>
+                        <div class="decorative-badge">
+                            <div class="badge-content">
+                                <span class="badge-text">Veterinary</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Do Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="services-content">
+                <div class="services-text">
+                    <h2>What We Do</h2>
+                    <h3>For Your Pet</h3>
+                    
+                    <div class="services-grid">
+                        <div class="service-item">
+                            <div class="service-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <h4>ARTICLES</h4>
+                            <p>We collect tips and tricks for improving your pet's health and happiness.</p>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h4>ONLINE CONSULTATION</h4>
+                            <p>Consult veterinarians and connect with other pet owners online.</p>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h4>VET CLINIC LOCATION</h4>
+                            <p>Find the nearest veterinary clinic location near you.</p>
+                        </div>
+                        
+                        <div class="service-item">
+                            <div class="service-icon">
+                                <i class="fas fa-comments-dollar"></i>
+                            </div>
+                            <h4>DISCUSSION FORUM</h4>
+                            <p>Join discussions with other pet owners and share experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="services-image">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=500&h=600&fit=crop&crop=center" alt="Dog and Cat" class="pets-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Easy Pet Wellness Section -->
+    <section class="wellness">
+        <div class="container">
+            <div class="wellness-content">
+                <div class="wellness-image">
+                    <div class="wellness-image-container">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&h=600&fit=crop&crop=center" alt="Happy Dog" class="wellness-img">
+                    </div>
+                </div>
+                
+                <div class="wellness-text">
+                    <h2>Easy Pet Wellness</h2>
+                    <h3>Instant Smiles</h3>
+                    <p>Kesehatan hewan peliharaan adalah prioritas utama bagi pemiliknya. Dengan layanan kami, Anda dapat memastikan hewan peliharaan Anda mendapatkan perawatan terbaik. Kami menyediakan berbagai layanan mulai dari konsultasi online hingga perawatan langsung di klinik terdekat.</p>
+                    <button class="explore-button">EXPLORE MORE</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="blog">
+        <div class="container">
+            <h2 class="blog-title">Blog</h2>
+            <p class="blog-subtitle">Temukan informasi terpercaya tentang perawatan hewan peliharaan di blog kami. Dari tips kesehatan hingga panduan perawatan, dapatkan wawasan berharga untuk menjaga kesehatan dan kebahagiaan hewan peliharaan Anda.</p>
+            
+            <div class="blog-grid">
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=250&fit=crop&crop=center" alt="Pet Care" class="blog-img">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">FOOD</span>
+                        <h3>Makanan Berbahaya untuk Hewan Peliharaan</h3>
+                        <p>Pelajari makanan apa saja yang berbahaya bagi hewan peliharaan Anda...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=250&fit=crop&crop=center" alt="Cat Health" class="blog-img">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">HEALTH</span>
+                        <h3>Perawatan Gigi dan Mulut pada Hewan</h3>
+                        <p>Tips menjaga kesehatan gigi dan mulut hewan peliharaan Anda...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                
+                <article class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=250&fit=crop&crop=center" alt="Pet Vaccination" class="blog-img">
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">VACCINATION</span>
+                        <h3>Pentingnya Vaksinasi untuk Hewan Peliharaan</h3>
+                        <p>Mengapa vaksinasi penting dan jadwal yang tepat untuk hewan peliharaan...</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="contact-form-section">
+                    <h2>Send a Message</h2>
+                    <form class="contact-form">
+                        <input type="text" placeholder="Your email" required>
+                        <input type="text" placeholder="Your name" required>
+                        <textarea placeholder="Your message" rows="5" required></textarea>
+                        <button type="submit" class="send-button">SEND</button>
+                    </form>
+                </div>
+                
+                <div class="contact-info-section">
+                    <h2>Get In Touch!</h2>
+                    <h3>For every new update from us</h3>
+                    <p>Kami berkomitmen memberikan layanan terbaik untuk hewan peliharaan Anda. Hubungi kami untuk konsultasi, jadwal kunjungan, atau pertanyaan seputar kesehatan hewan peliharaan.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>EMAIL</h4>
+                                <p><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="116170666278657867747d6851747c70787d3f727e7c">[email&#160;protected]</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>PHONE</h4>
+                                <p>+62 812 3456 7890</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <div class="faq-content">
+                <div class="faq-text">
+                    <h2>FAQ!</h2>
+                    <h3>Frequently Asked Questions</h3>
+                    
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Jam berapa pawsitively mulai beroperasi? Apakah Minggu tetap buka?</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Kami beroperasi setiap hari Senin-Sabtu pukul 08.00-20.00 WIB. Untuk hari Minggu, kami buka pukul 09.00-17.00 WIB.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Bisakah melakukan appointment?</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Ya, Anda dapat membuat appointment melalui website kami atau menghubungi langsung ke nomor telepon yang tersedia.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Apakah tersedia layanan pick up delivery?</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Saat ini kami menyediakan layanan pick up untuk area tertentu. Silakan hubungi kami untuk informasi lebih lanjut.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Jam berapa saja pasien boleh diantar?</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Pasien dapat diantar sesuai jam operasional kami. Untuk kasus emergency, kami menyediakan layanan 24 jam.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">
+                                <span>Apakah Pawsitively memiliki layanan rawat inap untuk penyakit menular?</span>
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Ya, kami memiliki fasilitas isolasi khusus untuk hewan dengan penyakit menular dengan protokol kesehatan yang ketat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-form">
+                    <h3>Ask a different question</h3>
+                    <form class="question-form">
+                        <input type="text" placeholder="Your email" required>
+                        <input type="text" placeholder="Your name" required>
+                        <textarea placeholder="Your question" rows="4" required></textarea>
+                        <button type="submit" class="ask-button">ASK</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Get In Touch!</h3>
+                    <p>For every new update from us</p>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">Subscribe</button>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#about">About Us</a></li>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#blog">Blog</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#faq">FAQ</a></li>
+                            <li><a href="#help">Help Center</a></li>
+                            <li><a href="#privacy">Privacy Policy</a></li>
+                            <li><a href="#terms">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="social-media">
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Pawsitively. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="./dashboard.js"></script>
+</body>
+</html>
